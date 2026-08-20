@@ -1,0 +1,458 @@
+# AMCL: 2D LaserScan과 2D 지도를 이용하는 위치추정 노드입니다.
+# 현재 시스템은 FAST-LIO PCD localization을 사용하므로 navigation_launch.py만
+# 실행할 때 이 블록은 사용되지 않습니다. AMCL과 FAST-LIO를 동시에 실행하면
+# map 계열 TF가 충돌할 수 있으므로 주의합니다.
+amcl:
+  ros__parameters:
+    # false: 실제 시스템 시간 사용, true: rosbag/Gazebo의 /clock 사용
+    use_sim_time: false
+    # 차동구동 오도메트리 운동 모델의 회전/직진 오차 계수
+    alpha1: 0.2
+    alpha2: 0.2
+    alpha3: 0.2
+    alpha4: 0.2
+    alpha5: 0.2
+    # AMCL이 로봇 본체로 간주할 TF 프레임
+    base_frame_id: "base_footprint"
+    # Beam skipping 관련 임계값. do_beamskip=false이면 아래 값들은 사용되지 않음
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    # AMCL이 위치를 추정할 전역 프레임
+    global_frame_id: "map"
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: 100.0
+    laser_min_range: -1.0
+    # likelihood_field: 지도 장애물과 Scan 사이 거리로 관측 확률 계산
+    laser_model_type: "likelihood_field"
+    # Scan 한 프레임에서 사용할 최대 beam 개수
+    max_beams: 60
+    # 파티클 필터의 최대/최소 파티클 수
+    max_particles: 2000
+    min_particles: 500
+    # AMCL이 사용하는 로컬 오도메트리 TF 프레임
+    odom_frame_id: "odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.0
+    recovery_alpha_slow: 0.0
+    resample_interval: 1
+    # 차동구동 로봇 운동 모델
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    save_pose_rate: 0.5
+    sigma_hit: 0.2
+    # true이면 AMCL이 map->odom TF를 발행함. FAST-LIO와 동시 사용 금지
+    tf_broadcast: true
+    transform_tolerance: 1.0
+    update_min_a: 0.2
+    update_min_d: 0.25
+    z_hit: 0.5
+    z_max: 0.05
+    z_rand: 0.5
+    z_short: 0.05
+    # AMCL이 구독할 LaserScan 토픽
+    scan_topic: scan
+
+# BT Navigator: 목표를 받아 경로 계획, 추종, 복구 동작을 Behavior Tree로 조율합니다.
+bt_navigator:
+  ros__parameters:
+    # 실제 로봇이므로 시스템 시간 사용
+    use_sim_time: false
+    # Navigation 목표와 전역 경로를 표현하는 기준 프레임
+    global_frame: map
+    # FAST-LIO가 발행하는 로봇 본체 프레임
+    robot_base_frame: base_link
+    # FAST-LIO Odometry 메시지 토픽(프레임 이름이 아니라 토픽 이름)
+    odom_topic: /odom_2d
+    # Behavior Tree 반복 주기(ms)와 action/service 응답 제한시간(ms)
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    wait_for_service_timeout: 1000
+    # 'default_nav_through_poses_bt_xml' and 'default_nav_to_pose_bt_xml' are use defaults:
+    # nav2_bt_navigator/navigate_to_pose_w_replanning_and_recovery.xml
+    # nav2_bt_navigator/navigate_through_poses_w_replanning_and_recovery.xml
+    # They can be set here or via a RewrittenYaml remap from a parent launch file to Nav2.
+    # BT XML에서 사용할 수 있는 action/condition/control 플러그인 목록
+    plugin_lib_names:
+      - nav2_compute_path_to_pose_action_bt_node
+      - nav2_compute_path_through_poses_action_bt_node
+      - nav2_smooth_path_action_bt_node
+      - nav2_follow_path_action_bt_node
+      - nav2_spin_action_bt_node
+      - nav2_wait_action_bt_node
+      - nav2_assisted_teleop_action_bt_node
+      - nav2_back_up_action_bt_node
+      - nav2_drive_on_heading_bt_node
+      - nav2_clear_costmap_service_bt_node
+      - nav2_is_stuck_condition_bt_node
+      - nav2_goal_reached_condition_bt_node
+      - nav2_goal_updated_condition_bt_node
+      - nav2_globally_updated_goal_condition_bt_node
+      - nav2_is_path_valid_condition_bt_node
+      - nav2_initial_pose_received_condition_bt_node
+      - nav2_reinitialize_global_localization_service_bt_node
+      - nav2_rate_controller_bt_node
+      - nav2_distance_controller_bt_node
+      - nav2_speed_controller_bt_node
+      - nav2_truncate_path_action_bt_node
+      - nav2_truncate_path_local_action_bt_node
+      - nav2_goal_updater_node_bt_node
+      - nav2_recovery_node_bt_node
+      - nav2_pipeline_sequence_bt_node
+      - nav2_round_robin_node_bt_node
+      - nav2_transform_available_condition_bt_node
+      - nav2_time_expired_condition_bt_node
+      - nav2_path_expiring_timer_condition
+      - nav2_distance_traveled_condition_bt_node
+      - nav2_single_trigger_bt_node
+      - nav2_goal_updated_controller_bt_node
+      - nav2_is_battery_low_condition_bt_node
+      - nav2_navigate_through_poses_action_bt_node
+      - nav2_navigate_to_pose_action_bt_node
+      - nav2_remove_passed_goals_action_bt_node
+      - nav2_planner_selector_bt_node
+      - nav2_controller_selector_bt_node
+      - nav2_goal_checker_selector_bt_node
+      - nav2_controller_cancel_bt_node
+      - nav2_path_longer_on_approach_bt_node
+      - nav2_wait_cancel_bt_node
+      - nav2_spin_cancel_bt_node
+      - nav2_back_up_cancel_bt_node
+      - nav2_assisted_teleop_cancel_bt_node
+      - nav2_drive_on_heading_cancel_bt_node
+      - nav2_is_battery_charging_condition_bt_node
+
+# NavigateThroughPoses action 전용 내부 BT 노드 시간 설정
+bt_navigator_navigate_through_poses_rclcpp_node:
+  ros__parameters:
+    use_sim_time: false
+
+# NavigateToPose action 전용 내부 BT 노드 시간 설정
+bt_navigator_navigate_to_pose_rclcpp_node:
+  ros__parameters:
+    use_sim_time: false
+
+# Controller Server: 전역 경로를 따라갈 속도 명령(cmd_vel)을 계산합니다.
+controller_server:
+  ros__parameters:
+    use_sim_time: false
+    # 속도/정지 상태 판단에 사용할 FAST-LIO Odometry 토픽
+    odom_topic: /odom_2d
+    # Local controller 실행 주파수(Hz)
+    controller_frequency: 20.0
+    # 이 값보다 작은 속도는 0으로 취급하는 임계값
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.5
+    min_theta_velocity_threshold: 0.001
+    # controller 실패 후 허용할 시간(초)
+    failure_tolerance: 0.3
+    # 진행 여부, 목표 도착 여부, 경로 추종에 사용할 플러그인 이름
+    progress_checker_plugin: "progress_checker"
+    goal_checker_plugins: ["general_goal_checker"] # "precise_goal_checker"
+    controller_plugins: ["FollowPath"]
+
+    # Progress checker: 지정 시간 동안 충분히 움직였는지 검사
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.5
+      movement_time_allowance: 10.0
+    # Goal checker: 목표 도착으로 판단할 위치/방향 허용 오차
+    #precise_goal_checker:
+    #  plugin: "nav2_controller::SimpleGoalChecker"
+    #  xy_goal_tolerance: 0.25
+    #  yaw_goal_tolerance: 0.25
+    #  stateful: True--------------------------------------------------------------0.25, 0.25
+    general_goal_checker:
+      stateful: True
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.25
+    # DWB Local Planner: 여러 속도 후보의 궤적을 시뮬레이션하고 최적 명령 선택
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      debug_trajectory_details: True
+      min_vel_x: 0.0
+      min_vel_y: 0.0
+      max_vel_x: 0.26
+      max_vel_y: 0.0
+      max_vel_theta: 1.0
+      min_speed_xy: 0.0
+      max_speed_xy: 0.26
+      min_speed_theta: 0.0
+      # Add high threshold velocity for turtlebot 3 issue.
+      # https://github.com/ROBOTIS-GIT/turtlebot3_simulations/issues/75
+      acc_lim_x: 2.5
+      acc_lim_y: 0.0
+      acc_lim_theta: 3.2
+      decel_lim_x: -2.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -3.2
+      vx_samples: 20
+      vy_samples: 5
+      vtheta_samples: 20
+      # 각 속도 후보를 몇 초 앞까지 시뮬레이션할지 설정
+      sim_time: 1.7
+      # 궤적 충돌검사 간격(선형 m, 각도 rad)
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.2
+      #0.25-----------------------------------------------
+      xy_goal_tolerance: 0.25
+      trans_stopped_velocity: 0.25
+      # 평가 실패가 확정되면 남은 critic 평가를 생략
+      short_circuit_trajectory_evaluation: True
+      stateful: True
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+      BaseObstacle.scale: 0.02
+      PathAlign.scale: 32.0
+      PathAlign.forward_point_distance: 0.1
+      GoalAlign.scale: 24.0
+      GoalAlign.forward_point_distance: 0.1
+      PathDist.scale: 32.0
+      GoalDist.scale: 24.0
+      RotateToGoal.scale: 32.0
+      RotateToGoal.slowing_factor: 5.0
+      RotateToGoal.lookahead_time: -1.0
+
+# Local Costmap: 로봇 주변의 짧은 범위에서 실시간 장애물을 관리합니다.
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      # Costmap 갱신 주기와 ROS 토픽 발행 주기(Hz)
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      # FAST-LIO의 연속적인 로컬 오도메트리 프레임
+      global_frame: odom
+      # Costmap에서 로봇 중심으로 사용할 프레임
+      robot_base_frame: base_link
+      use_sim_time: false
+      # true: 로봇을 따라 Costmap 창이 이동함
+      rolling_window: true
+      # Local Costmap 실제 크기(m). 현재 로봇 주변 3m x 3m
+      # Local Costmap 실제 크기(m). 현재 로봇 주변 5m x 5m로 변경
+      width: 3
+      height: 3
+      # 셀 한 칸 크기(m), 0.05는 5cm
+      resolution: 0.05
+      footprint: "[[0.42, 0.24], [0.42, -0.24],[-0.42, -0.24],[-0.42, 0.24]]"
+      #robot_radius: 0.35
+      # 실제로 로딩할 레이어와 적용 순서
+      # obstacle_layer로 변경함------------------------voxel_layer
+      plugins: ["obstacle_layer", "inflation_layer"]
+      # 장애물 주변에 안전 비용 영역을 생성하는 레이어
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        # 값이 클수록 장애물에서 멀어질 때 비용이 빠르게 감소------------------------------------------------------
+        #3,0.4
+        cost_scaling_factor: 1.0
+        # 장애물로부터 비용을 확장할 최대 거리(m)------------------------------------------------------
+        #장애물 주변으로 비용을 퍼뜨리는 최대 거리로 작게하면 두께가 얇아짐
+        inflation_radius: 0.6
+      # PointCloud2로 센서 장애물을 표시/제거하는 레이어
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        footprint_clearing_enabled: true
+        # FAST-LIO의 body-frame PointCloud를 직접 사용
+        observation_sources: lio_cloud
+        lio_cloud:
+          topic: /cloud_registered_body
+          data_type: "PointCloud2"
+          sensor_frame: body
+          # PointCloud 장애물 등록 및 광선 기반 빈 공간 제거
+          clearing: true
+          marking: true
+          min_obstacle_height: -0.1
+          max_obstacle_height: 1.2
+          obstacle_min_range: 0.3
+          obstacle_max_range: 8.0
+          raytrace_min_range: 0.3
+          raytrace_max_range: 12.0
+      # 현재 plugins 목록에 static_layer가 없으므로 이 설정은 로딩되지 않음
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+      # 매 발행마다 전체 Costmap을 보낼지 여부
+      always_send_full_costmap: True
+
+# Global Costmap: 2D 정적 지도 전체와 실시간 장애물로 전역 경로를 계산합니다.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      # 전역 지도 기준 프레임과 로봇 본체 프레임
+      global_frame: map
+      robot_base_frame: base_link
+      use_sim_time: false
+      #robot_radius: 0.35
+      footprint: "[[0.42, 0.24], [0.42, -0.24],[-0.42, -0.24],[-0.42, 0.24]]"
+      resolution: 0.05
+      
+      # true: 지도에서 관측되지 않은 영역을 unknown으로 유지
+      track_unknown_space: true
+      # Static Map -> 실시간 장애물 -> Inflation 순서로 합성
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      # FAST-LIO PointCloud로 동적 장애물을 추가하고 제거하는 레이어
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        footprint_clearing_enabled: true
+        observation_sources: lio_cloud
+        lio_cloud:
+          topic: /cloud_registered_body
+          data_type: "PointCloud2"
+          sensor_frame: body
+          min_obstacle_height: -0.1
+          max_obstacle_height: 1.2
+          obstacle_min_range: 0.3
+          obstacle_max_range: 8.0
+          raytrace_min_range: 0.3
+          raytrace_max_range: 10.0
+          clearing: true
+          marking: true
+          inf_is_valid: false
+      # Map Server의 /map OccupancyGrid를 받는 정적 지도 레이어
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        # 늦게 시작해도 Map Server의 마지막 지도를 받을 수 있도록 설정
+        map_subscribe_transient_local: True
+      # 전역 지도 장애물 주변의 안전 비용 영역
+      #3,0.55
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 0.1
+        inflation_radius: 0.4
+      always_send_full_costmap: True
+
+# Map Server: PNG/PGM + YAML 2D 지도를 /map OccupancyGrid로 발행합니다.
+# 현재는 별도 ros2 run 명령의 yaml_filename 파라미터로 지도 경로를 전달합니다.
+map_server:
+  ros__parameters:
+    use_sim_time: false
+    # Overridden in launch by the "map" launch configuration or provided default value.
+    # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
+    yaml_filename: ""
+
+# Map Saver: 현재 /map OccupancyGrid를 이미지와 YAML로 저장합니다.
+map_saver:
+  ros__parameters:
+    use_sim_time: false
+    save_map_timeout: 5.0
+    free_thresh_default: 0.25
+    occupied_thresh_default: 0.65
+    map_subscribe_transient_local: True
+
+# Planner Server: Global Costmap 위에서 시작점부터 목표점까지 전역 경로를 만듭니다.
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 1.0
+    use_sim_time: false
+    # 사용할 전역 경로 플래너 목록
+    planner_plugins: ["GridBased"]
+    GridBased:
+      # NavFn 기반 grid planner
+      plugin: "nav2_navfn_planner/NavfnPlanner"
+      # 목표가 막혀 있을 때 허용할 주변 거리(m)
+      tolerance: 0.5
+      # false: Dijkstra, true: A* 사용
+      use_astar: false
+      # true: unknown 영역을 통과하는 경로 계획 허용
+      allow_unknown: false
+
+# Smoother Server: 격자형 전역 경로의 꺾임을 부드럽게 다듬습니다.
+smoother_server:
+  ros__parameters:
+    use_sim_time: false
+    smoother_plugins: ["simple_smoother"]
+    simple_smoother:
+      plugin: "nav2_smoother::SimpleSmoother"
+      tolerance: 1.0e-10
+      max_its: 1000
+      do_refinement: True
+
+# Behavior Server: 회전, 후진, 대기 등 Navigation 복구/보조 동작을 실행합니다.
+behavior_server:
+  ros__parameters:
+    costmap_topic: local_costmap/costmap_raw
+    footprint_topic: local_costmap/published_footprint
+    cycle_frequency: 10.0
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    spin:
+      plugin: "nav2_behaviors/Spin"
+    backup:
+      plugin: "nav2_behaviors/BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors/DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors/Wait"
+    assisted_teleop:
+      plugin: "nav2_behaviors/AssistedTeleop"
+    # 복구 동작의 기준 프레임과 로봇 프레임
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_tolerance: 0.1
+    use_sim_time: false
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    rotational_acc_lim: 3.2
+
+# Robot State Publisher 시간 설정. URDF가 별도로 제공될 때 TF를 발행합니다.
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: false
+
+# Waypoint Follower: 여러 목표점을 순서대로 방문합니다.
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: false
+    loop_rate: 20
+    # 하나의 waypoint 실패 시 전체 작업을 중단할지 여부
+    stop_on_failure: false
+    waypoint_task_executor_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      # waypoint 도착 후 대기 시간(ms)
+      waypoint_pause_duration: 200
+
+# Velocity Smoother: Controller의 cmd_vel을 가감속 제한에 맞게 부드럽게 만듭니다.
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: false
+    # 속도 보간/발행 주파수(Hz)
+    smoothing_frequency: 20.0
+    # false이면 각 축 속도를 독립적으로 제한
+    scale_velocities: False
+    # OPEN_LOOP: 이전 출력 명령 기준, CLOSED_LOOP: Odometry 피드백 기준
+    feedback: "OPEN_LOOP"
+    # [x 선속도, y 선속도, z 각속도] 최대/최소값
+    max_velocity: [0.4, 0.0, 1.0]
+    min_velocity: [-0.4, 0.0, -1.0]
+    max_accel: [2.5, 0.0, 3.2]
+    max_decel: [-2.5, 0.0, -3.2]
+    # CLOSED_LOOP 사용 시 피드백에 사용할 FAST-LIO Odometry 토픽
+    odom_topic: "/odom_2d"
+    # Odometry가 유효하다고 판단할 최대 시간(초)
+    odom_duration: 0.1
+    # 이 값보다 작은 속도는 0으로 처리
+    deadband_velocity: [0.0, 0.0, 0.0]
+    # 새 cmd_vel이 없을 때 정지시키는 제한시간(초)
+    velocity_timeout: 1.0
+    # LaserScan 유효 거리. -1은 센서 메시지의 최소 거리 사용
+    # 이 각도/거리 이상 움직였을 때 AMCL 위치 업데이트 수행
+    # LaserScan 관측 모델 각 성분의 가중치
+      # x/y/theta 최소·최대 속도. 차동구동이므로 y 속도는 0
+      # 선속도/각속도 가속 및 감속 한계
+      # 샘플링할 x/y/theta 속도 후보 개수
+      # 각 critic의 가중치. 값이 클수록 해당 조건을 더 중요하게 평가
+          # clearing: 빈 공간 제거, marking: 장애물 등록
+      # 원형 로봇 반지름과 Costmap 해상도
+      # 최적화 종료 허용 오차, 최대 반복 수, 추가 refinement 여부
+    # 복구 동작이 사용할 Local Costmap과 로봇 footprint 토픽
+    # Behavior 실행 주기(Hz)와 사용할 동작 플러그인 목록
+    # TF 허용 지연, 전방 시뮬레이션 시간, 회전 속도/가속도 제한
+    # [x, y, theta] 가속/감속 한계
