@@ -8,14 +8,11 @@
 ![순찰 로봇 전체 모습](docs/media/01-robot-overview.jpg)
 -->
 
-**대표 이미지 위치:** 로봇 전체 모습에 MID-360, AXIS 카메라, 전조등, 경고등의 위치를 표시한 사진을 넣습니다.
 
 <!-- 대표 영상의 썸네일과 실제 영상 주소를 넣고 주석을 해제하세요.
 [![자율주행 순찰 로봇 통합 시연](docs/media/02-demo-thumbnail.jpg)](DEMO_VIDEO_URL)
 -->
 <img width="4000" height="3000" alt="image" src="https://github.com/user-attachments/assets/2c19dd16-49f0-4b3c-a660-bf05089755d4" />
-
-**대표 영상 위치:** 위치 추정 → 경유지 선택 → 자율주행 → 카메라 관제 → 조명·방송 제어를 보여주는 1~2분 영상을 넣습니다.
 
 ## 목차
 
