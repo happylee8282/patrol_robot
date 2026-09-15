@@ -203,9 +203,9 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 
 #### 지도·좌표·설정 도구
 
-
+##### GLIM-mapping
 <video src="https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6"
-       width="400"
+       width="300"
        controls>
 </video>
 
@@ -253,7 +253,7 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 [초기 자세 설정 및 위치 추정 영상](LOCALIZATION_VIDEO_URL)
 -->
 <video src="https://github.com/user-attachments/assets/83c63d3d-aab8-4a8f-997a-3a47f9e978ea"
-       width="400"
+       width="300"
        controls>
 </video>
 
@@ -305,9 +305,6 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 ![경사면 필터 적용 전후 점군 및 Costmap 비교](docs/media/05-slope-before-after.png)
 [경사로 주행과 장애물 유지 시연](SLOPE_VIDEO_URL)
 -->
-
-**사진 위치:** 같은 시점의 원본 점군, 제거된 점군, 최종 Costmap을 나란히 배치합니다. 경사면은 제거되고 경사면 위 장애물은 남는 사례를 사용하면 처리 목적이 드러납니다.
-
 ### 5. Nav2 구성 및 선택적 TEB·Costmap Converter
 
 #### 현재 기본 Nav2 설정
@@ -377,8 +374,6 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 [영상 전송 및 PTZ 제어 시연](CAMERA_VIDEO_URL)
 -->
 
-**영상 위치:** 클라이언트에서 좌우·상하 회전과 줌·홈 복귀를 조작하는 화면에 실제 카메라 움직임을 함께 보여줍니다.
-
 ### 7. gateway_pk — 로봇과 원격 클라이언트 연결
 
 #### meta_gateway.py
@@ -416,6 +411,29 @@ http://ROBOT_IP:8080/health    : 프레임 수신 상태
 ws://ROBOT_IP:8765            : 로봇 관제 WebSocket
 ```
 
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/00aa863f-8541-4aea-9e67-3ab4faceb4a0" width="300"><br>
+      <sub>좌상</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/1dbe4de0-8266-4eab-8814-a05f46892e12" width="300"><br>
+      <sub>우상</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/7a6fa36f-57b2-4c2b-a945-5ee19e26fb01" width="300"><br>
+      <sub>좌하</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/544d61ed-0d07-47ba-be64-48db03d1d814" width="300"><br>
+      <sub>우하</sub>
+    </td>
+  </tr>
+</table>
+
 ### 8. can_communication — 배터리 상태 수집
 
 | 코드 또는 구성 | 상세 역할 |
@@ -445,7 +463,7 @@ ws://ROBOT_IP:8765            : 로봇 관제 WebSocket
 ![조명·스피커·배터리 상태 연동](docs/media/07-peripherals.jpg)
 -->
 
-**사진 위치:** 전조등·경고등 작동 모습과 관제 화면의 배터리 잔량을 함께 넣습니다.
+<img width="438" height="178" alt="image" src="https://github.com/user-attachments/assets/d46387a7-e274-4aba-9698-eb83fa6ed79c" />
 
 ### 9. 공통 패키징·테스트·보관 파일
 
