@@ -9,6 +9,13 @@
   alt="순찰 로봇 전체 모습"
   width="400"
 />
+
+https://github.com/user-attachments/assets/6ae050c7-dea2-40f1-a3cb-28d4f5f7e00d
+
+
+https://github.com/user-attachments/assets/de311ee5-e965-4043-b52d-8f3a90432e9c
+
+
 ## 목차
 
 1. [프로젝트 개요](#프로젝트-개요)
@@ -203,12 +210,6 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 
 #### 지도·좌표·설정 도구
 
-##### GLIM-mapping
-<video src="https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6"
-       width="300"
-       controls>
-</video>
-
 | 파일 또는 디렉터리 | 역할 |
 |---|---|
 | [pose_coordinate_recorder.py](bringup/tools/pose_coordinate_recorder.py) | RViz의 `/initialpose`, `/clicked_point`, `/goal_pose`를 시간 정보와 함께 새 JSON에 저장합니다. |
@@ -222,6 +223,12 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 | [config/ps4/ps4_teleop.yaml](bringup/config/ps4/ps4_teleop.yaml) | 조이스틱 축·버튼 매핑과 속도 설정입니다. |
 | [map](bringup/map), [config/full_nav.rviz](bringup/config/full_nav.rviz) | 2D 점유 지도와 주행 시각화 설정입니다. 현재 launch가 사용하는 외부 지도 경로와 저장소 내 예시 지도는 구분해야 합니다. |
 | [tools/screaming.mp3](bringup/tools/screaming.mp3) | 스피커 노드에서 사용하는 기본 경고음 자산입니다. |
+
+##### GLIM-mapping
+<video src="https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6"
+       width="300"
+       controls>
+</video>
 
 ### 2. fast_lio_localization — LiDAR·IMU 위치 추정
 
@@ -374,6 +381,8 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 [영상 전송 및 PTZ 제어 시연](CAMERA_VIDEO_URL)
 -->
 
+https://github.com/user-attachments/assets/5d5cf541-2a6d-4897-97bb-41b8ccb4e4b5
+
 ### 7. gateway_pk — 로봇과 원격 클라이언트 연결
 
 #### meta_gateway.py
@@ -415,21 +424,21 @@ ws://ROBOT_IP:8765            : 로봇 관제 WebSocket
   <tr>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/00aa863f-8541-4aea-9e67-3ab4faceb4a0" width="300"><br>
-      <sub>좌상</sub>
+      <sub>first interface</sub>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/1dbe4de0-8266-4eab-8814-a05f46892e12" width="300"><br>
-      <sub>우상</sub>
+      <sub>second interface</sub>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/7a6fa36f-57b2-4c2b-a945-5ee19e26fb01" width="300"><br>
-      <sub>좌하</sub>
+      <sub>third interface</sub>
     </td>
     <td align="center">
       <img src="https://github.com/user-attachments/assets/544d61ed-0d07-47ba-be64-48db03d1d814" width="300"><br>
-      <sub>우하</sub>
+      <sub>fourth interface</sub>
     </td>
   </tr>
 </table>
