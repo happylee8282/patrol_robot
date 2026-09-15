@@ -752,9 +752,3 @@ ros2 topic echo /robot_nav/goal_success
 - [배터리 CAN 구성 문서](can_communication/config/README.md)
 
 일부 하위 README·주석에는 이전 토픽명과 설정이 남아 있습니다. 실제 동작은 현재 실행 코드, launch 인자, 로드되는 YAML·JSON을 우선 확인합니다.
-
-### 오픈소스 사용 범위
-
-FAST-LIO 계열 위치 추정, Livox 드라이버, ikd-Tree, IKFoM, TEB, Costmap Converter 및 RapidJSON 등 기존 오픈소스가 포함되어 있습니다. 포트폴리오에서는 이들 알고리즘 자체의 원저작과 프로젝트에서 수행한 적용·수정·통합 기여를 구분합니다.
-
-패키지와 포함 라이브러리의 라이선스는 각각의 `LICENSE`, `package.xml`, 소스 헤더를 따릅니다. 일부 자체 패키지에는 `TODO: License declaration`이 남아 있으므로 저장소 전체를 하나의 확정된 라이선스로 표기하지 않습니다.
