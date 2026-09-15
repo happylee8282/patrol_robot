@@ -4,11 +4,11 @@
 
 > LiDAR·IMU 위치 추정부터 경사면 장애물 필터링, 경유지 주행, 모터 제어, 카메라 영상 전송과 원격 관제까지 연결한 로봇 소프트웨어 시스템입니다.
 
-<!-- 대표 영상의 썸네일과 실제 영상 주소를 넣고 주석을 해제하세요.
-[![자율주행 순찰 로봇 통합 시연](docs/media/02-demo-thumbnail.jpg)](DEMO_VIDEO_URL)
--->
-<img width="4000" height="3000" alt="image" src="https://github.com/user-attachments/assets/2c19dd16-49f0-4b3c-a660-bf05089755d4" />
-
+<img
+  src="https://github.com/user-attachments/assets/2c19dd16-49f0-4b3c-a660-bf05089755d4"
+  alt="순찰 로봇 전체 모습"
+  width="800"
+/>
 ## 목차
 
 1. [프로젝트 개요](#프로젝트-개요)
