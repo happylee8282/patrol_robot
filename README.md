@@ -107,7 +107,6 @@ flowchart LR
 ![3D 위치 추정과 2D 주행 좌표계](docs/media/03-tf-rviz.png)
 -->
 
-**사진 위치:** RViz에서 사전 지도, 현재 점군, 로봇 위치와 TF를 함께 표시한 화면을 넣습니다.
 
 ## 전체 소스 구조
 
@@ -204,7 +203,11 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 
 #### 지도·좌표·설정 도구
 
-https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6
+
+<video src="https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6"
+       width="400"
+       controls>
+</video>
 
 | 파일 또는 디렉터리 | 역할 |
 |---|---|
@@ -249,8 +252,10 @@ https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6
 ![사전 PCD 지도와 현재 스캔 정합](docs/media/04-localization.png)
 [초기 자세 설정 및 위치 추정 영상](LOCALIZATION_VIDEO_URL)
 -->
-
-https://github.com/user-attachments/assets/83c63d3d-aab8-4a8f-997a-3a47f9e978ea
+<video src="https://github.com/user-attachments/assets/83c63d3d-aab8-4a8f-997a-3a47f9e978ea"
+       width="400"
+       controls>
+</video>
 
 ### 3. livox_ros_driver2 — 센서 데이터 입력
 
