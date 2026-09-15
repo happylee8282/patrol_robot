@@ -7,7 +7,7 @@
 <img
   src="https://github.com/user-attachments/assets/2c19dd16-49f0-4b3c-a660-bf05089755d4"
   alt="순찰 로봇 전체 모습"
-  width="800"
+  width="400"
 />
 ## 목차
 
