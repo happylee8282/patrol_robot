@@ -1,0 +1,12 @@
+battery_can_publisher:
+  ros__parameters:
+    interface: "can0"
+    can_id: 256
+    topic: "/battery_status"
+    poll_period_sec: 0.01
+
+    # Byte 4-5 remaining-time interpretation.
+    # "little" => (Byte5 << 8) | Byte4
+    # "big"    => (Byte4 << 8) | Byte5
+    # Keep "little" unless the verified BMS protocol says otherwise.
+    remaining_time_endian: "little"

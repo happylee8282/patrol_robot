@@ -1,0 +1,47 @@
+{
+  "websocket": {
+    "host": "0.0.0.0",
+    "port": 8765
+  },
+  "services": {
+    "robot_connection": {
+      "name": "/robot/connection",
+      "jet_request": 1,
+      "server_not_ready": 0,
+      "server_ready": 1,
+      "no_response_means": "not_ready"
+    }
+  },
+  "safety": {
+    "max_linear": 0.18,
+    "max_lateral": 0.18,
+    "max_angular": 0.5,
+    "drive_publish_hz": 50
+  },
+  "glasses_to_robot": {
+    "x_vel": "/meta/x_vel",
+    "z_angle": "/meta/z_angle",
+    "robot_cmd": "/cmd_vel",
+    "robot_mode": "/server/robot_mode",
+    "light_cmd": "/server/light_cmd",
+    "warning_broadcast": "/server/speaker",
+    "waypoint_goal": "/robot_nav/goal",
+    "axis_cmd": "/axis/axis_cmd"
+    ,"axis_home_cmd": "/axis/home_cmd"
+  },
+  "robot_to_glasses": {
+    "battery_status": "/battery_status",
+    "battery_array": "/robot/can/battery",
+    "battery_array_index": 0,
+    "battery_state": "/battery/soc",
+    "connection_status": "/meta/connection_status",
+    "robot_area": "/meta/robot_area",
+    "warning_broadcast_state": "/meta/warning_broadcast_state",
+    "robot_state": "/robot/robot_state",
+    "cmd_vel": "/cmd_vel",
+    "goal_success": "/robot_nav/goal_success",
+    "axis_state": "/axis/state",
+    "axis_image": "/axis/image_raw/compressed"
+  }
+}
+

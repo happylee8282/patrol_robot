@@ -1,0 +1,5 @@
+[console_scripts]
+mode_keyboard = bringup.mode_keyboard_ros2_humble:main
+uart = bringup.uart_ros2_humble:main
+wheel_cmd = bringup.wheel_cmd_ros2_humble:main
+

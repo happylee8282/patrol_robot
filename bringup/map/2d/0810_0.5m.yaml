@@ -1,0 +1,6 @@
+free_thresh: 0.3
+image: 0810_0.5m.png
+negate: 0
+occupied_thresh: 0.6
+origin: [-215.99749755859375, -208.2510223388672, 0.0]
+resolution: 0.5

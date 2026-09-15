@@ -1,0 +1,15 @@
+[Unit]
+Description=Coastal Patrol ROS2 AXIS MJPEG bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=REPLACE_WITH_JETSON_USER
+WorkingDirectory=/home/REPLACE_WITH_JETSON_USER/coastalpatrol-webapp/ros_gateway
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && exec python3 axis_mjpeg_bridge.py --topic /axis/image_raw/compressed --port 8080'
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
