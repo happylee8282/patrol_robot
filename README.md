@@ -204,7 +204,7 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 
 #### 지도·좌표·설정 도구
 
-Uploading mapping.mp4…
+https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6
 
 | 파일 또는 디렉터리 | 역할 |
 |---|---|
@@ -249,10 +249,6 @@ Uploading mapping.mp4…
 ![사전 PCD 지도와 현재 스캔 정합](docs/media/04-localization.png)
 [초기 자세 설정 및 위치 추정 영상](LOCALIZATION_VIDEO_URL)
 -->
-
-
-
-https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6
 
 https://github.com/user-attachments/assets/83c63d3d-aab8-4a8f-997a-3a47f9e978ea
 
