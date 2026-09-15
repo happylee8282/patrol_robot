@@ -2,7 +2,8 @@
 
 # Patrol Robot | ROS 2 기반 자율주행 순찰 로봇
 
-> LiDAR·IMU 위치 추정부터 경사면 장애물 필터링, 경유지 주행, 모터 제어, 카메라 영상 전송과 원격 관제까지 연결한 로봇 소프트웨어 시스템
+LiDAR·IMU 위치 추정부터 경사면 장애물 필터링, 경유지 주행, 모터 제어, 카메라 영상 전송과 원격 관제까지 연결한 로봇 소프트웨어 시스템
+
 <img
   src="https://github.com/user-attachments/assets/2c19dd16-49f0-4b3c-a660-bf05089755d4"
   alt="순찰 로봇 전체 모습"
