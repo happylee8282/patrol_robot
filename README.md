@@ -28,8 +28,6 @@
 
 순찰 로봇이 사전 제작된 지도에서 자신의 위치를 추정하고 지정한 경유지로 이동하도록 구성합니다. 주행 중에는 LiDAR 점군으로 주변 장애물을 반영하고, 운영자는 원격 클라이언트에서 카메라 영상과 로봇 상태를 확인하며 주행·조명·방송·카메라 방향을 제어할 수 있습니다.
 
-이 저장소의 `src`는 로봇 측 ROS 2 패키지와 통신 브리지를 포함합니다. 외부 웹앱·글래스 앱의 전체 프런트엔드, 모터 제어기 펌웨어, 하드웨어 회로 설계는 이 디렉터리의 설명 범위에 포함되지 않습니다.
-
 ### 구현 범위
 
 | 영역 | 구현 내용 | 관련 패키지 |
@@ -54,8 +52,6 @@
 - **위치 추정·점군 처리:** FAST-LIO, PCL, Eigen, ikd-Tree, IKFoM, NumPy.
 - **주행:** Nav2, NavFn, DWB, Costmap, 선택 구성인 TEB·g2o.
 - **영상·관제:** OpenCV, cv_bridge, HTTP MJPEG, WebSocket, aiohttp.
-
-**문서 기준:** 현재 소스, 실행 파일 등록, launch 및 설정 파일을 기준으로 작성했습니다. 아래의 주기·속도·허용 오차는 설정값이며 실측 성능을 의미하지 않습니다. 개발 기간, 개인 담당 범위, 주행 성공률 등은 실제 기록을 추가하도록 별도로 마련했습니다.
 
 ## 시스템 구성과 데이터 흐름
 
@@ -208,6 +204,8 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 
 #### 지도·좌표·설정 도구
 
+Uploading mapping.mp4…
+
 | 파일 또는 디렉터리 | 역할 |
 |---|---|
 | [pose_coordinate_recorder.py](bringup/tools/pose_coordinate_recorder.py) | RViz의 `/initialpose`, `/clicked_point`, `/goal_pose`를 시간 정보와 함께 새 JSON에 저장합니다. |
@@ -252,7 +250,11 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 [초기 자세 설정 및 위치 추정 영상](LOCALIZATION_VIDEO_URL)
 -->
 
-**사진·영상 위치:** 초기 자세를 지정한 뒤 현재 스캔이 사전 지도와 정렬되는 장면, 로봇 이동 중 지도 기준 위치가 갱신되는 장면을 넣습니다.
+
+
+https://github.com/user-attachments/assets/7c42ae66-b66f-4c2e-bd9c-355ae08aebc6
+
+https://github.com/user-attachments/assets/83c63d3d-aab8-4a8f-997a-3a47f9e978ea
 
 ### 3. livox_ros_driver2 — 센서 데이터 입력
 
