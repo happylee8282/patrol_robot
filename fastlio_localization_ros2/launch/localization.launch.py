@@ -185,11 +185,11 @@ def generate_launch_description():
     #   /initialpose (geometry_msgs/PoseWithCovarianceStamped) - 初始位姿估计
     # 
     # 参数：
-    #   map_voxel_size (0.4)：下采样先验地图的体素大小(米)
-    #   scan_voxel_size (0.1)：下采样当前扫描的体素大小(米)
+    #   map_voxel_size (0.2)：下采样先验地图的体素大小(米)
+    #   scan_voxel_size (0.2)：下采样当前扫描的体素大小(米)
     #   freq_localization (0.5)：定位更新频率(Hz)
     #   freq_global_map (0.25)：全局地图更新频率(Hz)
-    #   localization_threshold (0.8)：成功匹配的置信度阈值
+    #   localization_threshold (0.65)：成功匹配的置信度阈值
     #   fov (6.28319)：视场角，单位弧度(2π = 全向)
     #   fov_far (300)：视场最大范围(米)
     #   pcd_map_path：先验PCD地图文件路径
@@ -201,18 +201,18 @@ def generate_launch_description():
         output="screen",
         parameters=[
             {
-                "map_voxel_size": 0.4,          # 地图下采样分辨率
+                "map_voxel_size": 0.2,          # Preserve enough map detail for fine ICP.
                 "scan_voxel_size": 0.2,         # 扫描下采样分辨率
                 "freq_localization": 0.5,       # 定位更新频率 happy - 0.5hz
                 "freq_global_map": 0.25,        # 全局地图更新频率
-                "localization_threshold": 0.65,  # 匹配置信度阈值
+                "localization_threshold": 0.75,  # 匹配置信度阈值
                 "fov": 6.28319,                 # 视场角(360度，弧度制)
                 "fov_far": 300.0,               # 最大感知范围
                 "pcd_map_path": pcd_map_path,   # 先验地图文件路径
                 "pcd_map_topic": pcd_map_topic, # 地图订阅话题
                 "icp_coarse_max_corr_dist": 1.5,
-                "icp_fine_max_corr_dist": 0.3,
-                "icp_rmse_threshold": 0.2,
+                "icp_fine_max_corr_dist": 0.4,
+                "icp_rmse_threshold": 0.25,
             }
         ],
     )

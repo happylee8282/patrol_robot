@@ -12,7 +12,7 @@
 
         common:
             lid_topic:  "/livox/lidar"
-            imu_topic:  "/livox/imu"
+            imu_topic:  "/imu/data"
             time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
             time_offset_lidar_to_imu: 0.0 # Time offset between lidar and IMU calibrated by other algorithms, e.g. LI-Init (can be found in README).
                                         # This param will take effect no matter what time_sync_en is. So if the time offset is not known exactly, please set as 0.0
@@ -31,8 +31,12 @@
             b_gyr_cov: 0.0001
             fov_degree:    360.0
             det_range:     100.0
-            extrinsic_est_en:  true      # true: enable the online estimation of IMU-LiDAR extrinsic
-            extrinsic_T: [ -0.011, -0.02329, 0.04412 ]
+            # MID360 center: 0.62 m forward, 0.22 m left of the myAHRS center.
+            # Both sensors are 0.72 m above the floor, hence relative z = 0.
+            # Rotation assumes their x-forward/y-left/z-up axes are aligned.
+            # tf_link.py reads these same extrinsics to publish the sensor TF.
+            extrinsic_est_en:  false     # Keep FAST-LIO and the static TF aligned.
+            extrinsic_T: [ 0.62, 0.22, 0.0 ]
             extrinsic_R: [ 1., 0., 0.,
                             0., 1., 0.,
                             0., 0., 1.]

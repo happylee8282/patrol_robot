@@ -1,0 +1,76 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Enabled: true
+      Name: Floor (0.72 m below IMU)
+      Cell Size: 0.5
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: base_footprint
+      Color: 120; 120; 120
+      Alpha: 0.5
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Name: Sensor TF
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.3
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Enabled: true
+      Name: MID360 preview (every 4th point)
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /livox/points
+      Color Transformer: Intensity
+      Autocompute Intensity Bounds: false
+      Min Intensity: 0
+      Max Intensity: 255
+      Decay Time: 0
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.03
+      Style: Points
+      Use Fixed Frame: true
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 20; 20; 20
+    Fixed Frame: base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/Interact
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 6
+      Focal Point:
+        X: 0.6
+        Y: 0.2
+        Z: 0
+      Name: Current View
+      Pitch: 0.65
+      Target Frame: base_link
+      Value: Orbit (rviz_default_plugins)
+      Yaw: 0.8

@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""Publish a planar TF and odometry branch for Nav2 from FAST-LIO data."""
+"""Publish planar odometry for Nav2 from FAST-LIO data."""
 
 import math
 
 import rclpy
-from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import Odometry
 from rclpy.node import Node
-from tf2_ros import TransformBroadcaster
 
 
 def yaw_from_quaternion(quaternion):
@@ -28,26 +26,17 @@ def set_yaw(quaternion, yaw):
 
 
 class Nav2Tf2D(Node):
-    """Create map->odom->base_link as a planar copy of the FAST-LIO chain."""
+    """Publish /odom_2d; TF is provided by FAST-LIO and the bringup launches."""
 
     def __init__(self):
         super().__init__('nav2_tf_2d')
         self.declare_parameter('lio_odom_topic', '/Odometry')
-        self.declare_parameter('map_correction_topic', '/map_to_odom')
         self.declare_parameter('nav_odom_topic', '/odom_2d')
 
-        self._map_correction = None
-        self._broadcaster = TransformBroadcaster(self)
         self._odom_publisher = self.create_publisher(
             Odometry,
             self.get_parameter('nav_odom_topic').value,
             20,
-        )
-        self.create_subscription(
-            Odometry,
-            self.get_parameter('map_correction_topic').value,
-            self._map_correction_callback,
-            10,
         )
         self.create_subscription(
             Odometry,
@@ -56,37 +45,9 @@ class Nav2Tf2D(Node):
             20,
         )
 
-    def _map_correction_callback(self, message):
-        self._map_correction = message
-
     def _lio_odom_callback(self, message):
         stamp = message.header.stamp
-
-        map_to_odom = TransformStamped()
-        map_to_odom.header.stamp = stamp
-        map_to_odom.header.frame_id = 'map'
-        map_to_odom.child_frame_id = 'odom'
-        if self._map_correction is not None:
-            pose = self._map_correction.pose.pose
-            map_to_odom.transform.translation.x = pose.position.x
-            map_to_odom.transform.translation.y = pose.position.y
-            set_yaw(
-                map_to_odom.transform.rotation,
-                yaw_from_quaternion(pose.orientation),
-            )
-        else:
-            map_to_odom.transform.rotation.w = 1.0
-
-        odom_to_base = TransformStamped()
-        odom_to_base.header.stamp = stamp
-        odom_to_base.header.frame_id = 'odom'
-        odom_to_base.child_frame_id = 'base_link'
-        odom_to_base.transform.translation.x = message.pose.pose.position.x
-        odom_to_base.transform.translation.y = message.pose.pose.position.y
         yaw = yaw_from_quaternion(message.pose.pose.orientation)
-        set_yaw(odom_to_base.transform.rotation, yaw)
-
-        self._broadcaster.sendTransform([map_to_odom, odom_to_base])
 
         odom_2d = Odometry()
         odom_2d.header.stamp = stamp

@@ -12,7 +12,7 @@ slope_cloud_filter:
     # ==================================================
     # BODY 원점에서 지면까지 거리(= LiDAR 설치 높이)
     # 가장 가까운 링의 지면 높이 초기 추정값으로만 사용됨
-    lidar_height_m: 0.35
+    lidar_height_m: 0.72
 
     # odom의 roll/pitch로 중력정렬 후 판정할지 여부
     # odom(FAST-LIO)이 불안정하면 false로 두고 테스트
