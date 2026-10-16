@@ -2,11 +2,10 @@
 //
 // The horizontal window is centred on the sensor front (yaw 0 degrees).
 // Two FOV windows are required because the selected span crosses yaw 0.
-// The vertical window is fixed to 0..+52 degrees. This removes only the
-// downward-looking MID-360 band (-7..0 degrees).
+// The vertical window stays at -7..+52 degrees.
 
-// Example: keep 225 degrees horizontally and remove the lower -7..0 band:
-//   ./set_mid360_fov MID360_config.json 225
+// Example: keep 105 degrees on each side of the front (210 total):
+//   ./set_mid360_fov MID360_config.json 210
 //
 // Restore the full hardware FOV:
 //   ./set_mid360_fov MID360_config.json off
@@ -29,7 +28,7 @@ constexpr int32_t kPitchStart = -7;
 constexpr int32_t kPitchStop = 52;
 
 std::atomic<bool> g_done{false};
-double g_span_deg = 225.0;
+double g_span_deg = 0.0;
 bool g_disable = false;
 
 void OnFovCfg0(livox_status status, uint32_t,
@@ -72,8 +71,8 @@ void LidarInfoChangeCallback(uint32_t handle, const LivoxLidarInfo* info,
     return;
   }
 
-  // Truncation preserves the original 225-degree windows: 0..112 and
-  // 248..359 (225 integer-degree directions in total).
+  // For a 210-degree span, half=105: front-left 0..105 and
+  // front-right 255..359 (yaw -105..+105 around the sensor front).
   const int32_t half = static_cast<int32_t>(g_span_deg / 2.0);
 
   FovCfg cfg0{};
@@ -108,7 +107,7 @@ void PrintUsage(const char* program) {
       "  %s <config.json> <horizontal_span>\n"
       "  %s <config.json> off\n\n"
       "examples:\n"
-      "  %s MID360_config.json 225\n"
+      "  %s MID360_config.json 210\n"
       "  %s MID360_config.json off\n",
       program, program, program, program);
 }

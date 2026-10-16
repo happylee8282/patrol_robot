@@ -253,16 +253,15 @@ local_costmap:
       use_sim_time: false
       # true: 로봇을 따라 Costmap 창이 이동함 (잔상이 자동으로 밀려나감)
       rolling_window: true
-      # [수정] 3m -> 6m
-      # robot_radius 0.4 + inflation_radius 0.6 이면 3m 창(반경 1.5m)에는
-      # 회피할 여유 공간이 거의 남지 않습니다.
+      # 현재 로컬 지도 창은 3m x 3m입니다.
       width: 3
       height: 3
       # 셀 한 칸 크기(m), 0.05는 5cm
       resolution: 0.05
-      # 원형 로봇 반지름
-      #footprint: "[[0.42, 0.24], [0.42, -0.24],[-0.42, -0.24],[-0.42, 0.24]]"
-      robot_radius: 0.4
+      # base_link=IMU 중심. 전방 0.62m, 후방 0.04m, 좌우 각 0.22m.
+      # 전체 외형 0.66m x 0.44m (x 전방, y 좌측).
+      footprint: "[[0.62, 0.22], [0.62, -0.22], [-0.04, -0.22], [-0.04, 0.22]]"
+      footprint_padding: 0.0
       # 실제로 로딩할 레이어와 적용 순서
       plugins: ["obstacle_layer", "inflation_layer"]
 
@@ -353,9 +352,9 @@ global_costmap:
       # [추가] map->odom이 ICP 기반이라 갱신이 느립니다.
       # 기본값 0.3초면 그 사이 클라우드가 TF 지연으로 전부 버려집니다.
       transform_tolerance: 1.0
-      # 원형 로봇 반지름과 Costmap 해상도
-      robot_radius: 0.4
-      #footprint: "[[0.42, 0.24], [0.42, -0.24],[-0.42, -0.24],[-0.42, 0.24]]"
+      # 로컬 Costmap과 동일한 IMU 중심 직사각형 footprint.
+      footprint: "[[0.62, 0.22], [0.62, -0.22], [-0.04, -0.22], [-0.04, 0.22]]"
+      footprint_padding: 0.0
       resolution: 0.05
 
       # [수정] true -> false
@@ -433,9 +432,7 @@ global_costmap:
 
       # 전역 지도 장애물 주변의 안전 비용 영역
       #
-      # 참고: inflation_radius(0.4)가 robot_radius(0.4)와 같아 여유가 없습니다.
-      #       좁은 통로 통과가 목적이면 현재 값이 맞고,
-      #       안전 여유가 필요하면 0.55~0.7로 올리세요.
+      # 장애물 주위의 추가 비용 거리. Footprint 자체 크기와는 별개입니다.
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 0.1

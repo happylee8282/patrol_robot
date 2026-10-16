@@ -156,7 +156,7 @@ src/
 | [bringup_all.launch.py](bringup/launch/bringup_all.launch.py) | 구동부를 시작하고 조명·스피커·모드·CAN·배터리 노드를 시간차로 시작합니다. |
 | [bringup.launch.py](bringup/launch/bringup.launch.py) | `uart`, `wheel_cmd` 두 노드를 실행합니다. |
 | [bringup_localization.launch.py](bringup/launch/bringup_localization.launch.py) | MID-360 드라이버와 FAST-LIO 위치 추정 launch를 포함합니다. PCD 경로와 센서 설정을 전달합니다. |
-| [bringup_navigation.launch.py](bringup/launch/bringup_navigation.launch.py) | `nav2_tf_2d`, Map Server, 지도 Lifecycle Manager, Nav2 navigation launch를 실행합니다. |
+| [bringup_navigation.launch.py](bringup/launch/bringup_navigation.launch.py) | `nav2_tf_2d`, `slope_cloud_filter`, Map Server, 지도 Lifecycle Manager, Nav2 navigation launch를 실행합니다. |
 | [bringup_cam.launch.py](bringup/launch/bringup_cam.launch.py) | AXIS 영상·PTZ 노드를 포함하고 `view:=true`일 때 OpenCV 뷰어를 추가합니다. |
 | [ps4_control.launch.py](bringup/launch/ps4_control.launch.py) | `joy_node`와 `ps4_control`을 PS4 YAML 설정으로 실행합니다. |
 
@@ -212,8 +212,9 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 | [convert_map_resolution.py](bringup/tools/convert_map_resolution.py) | 점유 지도 해상도를 낮추면서 월드 좌표 관계를 유지하도록 이미지와 YAML을 변환합니다. 장애물 보존을 고려한 축소 처리가 포함됩니다. |
 | [set_mid360_fov.cpp](bringup/tools/set_mid360_fov.cpp) | Livox SDK를 이용한 MID-360 시야각 설정 도구입니다. 같은 디렉터리의 실행 바이너리는 해당 코드의 실행 산출물입니다. |
 | [slope_cloud_filter_node.py](bringup/tools/slope_cloud_filter_node.py) | 필터의 도구용 구현입니다. 이 문서의 주 실행 경로는 별도 `slope_cloud_filter` 패키지의 등록된 노드를 사용합니다. |
-| [nav2_pcd_params.yaml](bringup/config/nav2_pcd_params.yaml) | 현재 navigation launch가 읽는 Nav2 기본 설정입니다. |
-| `config/nav2_pcd_params_*.yaml`, `newone.yaml` | 주행 조건과 계획기를 달리한 설정 변형입니다. 파일이 존재해도 현재 launch가 자동 선택하지는 않습니다. |
+| [nav2_pcd_params_teb.yaml](bringup/config/nav2_pcd_params_teb.yaml) | 현재 navigation launch가 기본으로 읽는 TEB 설정입니다. |
+| [nav2_pcd_params.yaml](bringup/config/nav2_pcd_params.yaml) | `params_file` 인자로 선택할 수 있는 DWB 설정입니다. |
+| `config/nav2_pcd_params_*.yaml`, `newone.yaml` | 주행 조건과 계획기를 달리한 설정 변형입니다. |
 | [config/point_map](bringup/config/point_map) | 초기 자세·목표 자세 기록 및 환경별 경유지 JSON을 보관합니다. |
 | [config/ps4/ps4_teleop.yaml](bringup/config/ps4/ps4_teleop.yaml) | 조이스틱 축·버튼 매핑과 속도 설정입니다. |
 | [map](bringup/map), [config/full_nav.rviz](bringup/config/full_nav.rviz) | 2D 점유 지도와 주행 시각화 설정입니다. 현재 launch가 사용하는 외부 지도 경로와 저장소 내 예시 지도는 구분해야 합니다. |
@@ -309,7 +310,7 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 -->
 ### 5. Nav2 구성 및 선택적 TEB·Costmap Converter
 
-#### 현재 기본 Nav2 설정
+#### DWB 설정(선택 사항)
 
 [nav2_pcd_params.yaml](bringup/config/nav2_pcd_params.yaml)은 다음 구성을 사용합니다.
 
@@ -322,14 +323,16 @@ wheel_cmd: [왼쪽 방향, 왼쪽 속도, 오른쪽 방향, 오른쪽 속도, �
 | 목표 허용 오차 | XY `0.25 m`, yaw `0.25 rad` |
 | Local Costmap | `odom` 기준, 3 × 3 m 이동 창, 0.05 m 해상도 |
 | Global Costmap | `map` 기준, Static + Obstacle + Inflation 레이어 |
-| 로봇 형상 | 원형 반지름 `0.4 m` |
+| 로봇 형상 | IMU 기준 0.66 × 0.44 m 직사각형 footprint |
 | 장애물 등록 | `/cloud_global_filtered` |
 | 관측 기반 장애물 제거 | `/cloud_ground_clearing` |
 | 보조 구성 | Behavior Tree, 경로 Smoother, 회전·후진·대기 Behavior, Velocity Smoother |
 
 #### TEB 구현
 
-[teb_local_planner](teb_local_planner/teb_local_planner)는 시간 간격과 로봇 자세로 구성된 궤적을 최적화하는 대체 지역 계획기입니다. **현재 기본 YAML에서는 활성화되지 않습니다.**
+[teb_local_planner](teb_local_planner/teb_local_planner)는 시간 간격과 로봇 자세로 구성된 궤적을 최적화하는 지역 제어기입니다. `bringup_navigation.launch.py`는 기본으로 [nav2_pcd_params_teb.yaml](bringup/config/nav2_pcd_params_teb.yaml)을 선택합니다. 이 설정은 실제 직사각형 footprint, 6 × 6 m Local Costmap, 10 Hz 제어 주기 및 `costmap_converter::CostmapToPolygonsDBSMCCH`를 사용합니다. DWB로 전환할 때는 `params_file:=/home/unicon/nav_ws/src/bringup/config/nav2_pcd_params.yaml`을 지정합니다.
+
+TEB 조정값은 YAML의 `controller_server.ros__parameters.FollowPath` 아래에 있습니다. `max_vel_x`·`max_vel_theta`와 `acc_lim_x`·`acc_lim_theta`는 각각 최고 속도와 가속도 제한입니다. `min_obstacle_dist`는 로봇 형상 바깥의 추가 장애물 간격이며 `inflation_dist`는 그보다 커야 합니다. `max_global_plan_lookahead_dist`는 TEB가 참조할 전역 경로 길이이고, `dt_ref`는 궤적의 목표 시간 간격입니다. `footprint_model.vertices`를 바꾸면 Local/Global Costmap의 `footprint`도 같은 형상으로 맞춰야 합니다. 수정 후에는 Navigation launch를 다시 시작해 새 YAML을 읽힙니다.
 
 | 코드 영역 | 역할 |
 |---|---|
@@ -632,41 +635,41 @@ ros2 launch bringup bringup_all.launch.py
 ros2 launch bringup bringup_localization.launch.py
 ```
 
-**C. 지면 필터**
-
-```bash
-ros2 run slope_cloud_filter slope_cloud_filter --ros-args \
-  --params-file /home/unicon/nav_ws/src/slope_cloud_filter/config/slope_filter.yaml
-```
-
-**D. Nav2와 2D 지도**
+**C. Nav2, 2D 지도, 지면 필터**
 
 ```bash
 ros2 launch bringup bringup_navigation.launch.py
 ```
 
-**E. 시각화**
+이 런치가 `slope_cloud_filter`를 함께 시작합니다. 필터를 별도로 실행하면 같은 출력 토픽에 발행자가 중복되므로 따로 실행하지 않습니다.
+기본 지역 제어기는 TEB입니다. DWB를 사용하려면 `params_file:=/home/unicon/nav_ws/src/bringup/config/nav2_pcd_params.yaml`을 붙입니다.
+
+**D. 시각화**
 
 ```bash
 rviz2 -d /home/unicon/nav_ws/src/bringup/config/full_nav.rviz
 ```
 
+RViz의 `PCD Map (3D)`은 점군 지도이고 `Global Costmap`은 Nav2가 쓰는 2D 비용 지도입니다. 두 지도를 겹쳐 볼 때는 비용 지도를 반투명하게 표시합니다. `Local Costmap`과 원본 `/map`의 `Static Map`은 필요할 때 Displays 패널에서 각각 켜서 확인합니다. 원본 2D 지도의 회색 부분은 미탐색 영역이므로 RViz 표시 설정으로 주행 가능 영역이 넓어지지는 않습니다.
+
+`Nav2 Global Path`는 Nav2 planner의 `/plan`을 표시합니다. `Nav2 Local Path`는 controller의 `/local_plan`을 표시하며, 실제 목표가 수락되고 경로 계산이 성공한 뒤에 나타납니다. FAST-LIO의 `/path`는 로봇 이동 궤적 토픽이므로 Nav2 경로 확인에 사용하지 않습니다.
+
 RViz에서 `/initialpose`를 지정하고 `/map_to_odom`이 갱신되는지 확인합니다. JSON 초기 자세를 이용할 경우에는 위치 추정 노드가 준비된 뒤 다음 경유지 노드를 실행합니다.
 
-**F. JSON 경유지 관리자**
+**E. JSON 경유지 관리자**
 
 ```bash
 ros2 run bringup json_navigation --ros-args \
   -p json_file:=/home/unicon/nav_ws/src/bringup/config/point_map/final.json
 ```
 
-**G. 원격 관제와 카메라**
+**F. 원격 관제와 카메라**
 
 ```bash
 ros2 launch gateway_pk bringup_gateway.launch.py
 ```
 
-카메라만 확인할 경우 G 대신 다음을 사용합니다.
+카메라만 확인할 경우 F 대신 다음을 사용합니다.
 
 ```bash
 ros2 launch bringup bringup_cam.launch.py view:=true
