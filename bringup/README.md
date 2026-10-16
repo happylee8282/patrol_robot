@@ -45,3 +45,22 @@ ros2 launch myahrs_ros2_driver   myahrs_ros2_driver.launch.py use_rviz:=false
   
  #checking the tf and lidar fov
  ros2 launch bringup tf_link.launch.py rviz:=true
+
+
+
+future work
+global 
+- smac a*
+- NavFn (Dijkstra)
+- Theta*
+
+local
+- MPPI
+- DWB (Dynamic Window Approach)
+- TEB 
+-  MPC
+
+* robot arm - RRT / RRT*
+https://github.com/rst-tu-dortmund/mpc_local_planner/tree/ros2-master
+
+
